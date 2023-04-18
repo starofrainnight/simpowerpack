@@ -1,9 +1,12 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 import pathlib
 import click
 import subprocess
 import glob
 import os
+import subprocess
 from pytosim.__main__ import (
     compile as pytosim_compile,
     compile_base as pytosim_compile_base,
@@ -25,6 +28,13 @@ def main(ctx, output_dir):
     srcs = glob.glob("./src/*.py")
     if len(srcs) < 0:
         click.echo("No source found!")
+
+    try:
+        subprocess.check_call("mypy ./src", shell=True)
+    except subprocess.CalledProcessError:
+        raise click.ClickException(
+            "Mypy check failed! Please fix those issues first!"
+        )
 
     click.echo("Ouptut to %s" % output_dir)
 
