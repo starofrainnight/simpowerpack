@@ -1,14 +1,18 @@
 from pytosim.api import filebuffer
 from pytosim.api.types import HBuffer
-import sppdebug
+from . import sppdebug
 
 
-def SppAssertEqual(a, b):
+def SppAssertEqual(a, b, msg):
     if a == b:
-        result = True
+        result = "Passed"
     else:
-        result = False
+        result = "Failed"
 
-    msg = f"ASSERT: {a} == {b}, RESULT: {result}"
+    msg = f"ASSERT:{result}: {msg}: {a} == {b}"
 
     sppdebug.SppTrace(msg)
+
+
+def SppAssertEqual2(a, b):
+    SppAssertEqual(a, b, "NONE")
