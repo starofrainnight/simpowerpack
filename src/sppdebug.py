@@ -20,3 +20,9 @@ def SppTraceMacroState():
     hbuf = SppGetDebugOutputBuf()
     simsys.DumpMacroState(hbuf)
     simbuf.SetBufDirty(hbuf, False)
+
+
+def SppTraceClear():
+    hbuf = SppGetDebugOutputBuf()
+    simbuf.ClearBuf(hbuf)
+    simbuf.SetBufDirty(hbuf, False)
