@@ -37,3 +37,7 @@ def SppPathGetExtName(path: str) -> str:
         return ""
 
     return baseName[dotIndex:pathLen]
+
+
+def SppPathStripExt(path: str) -> str:
+    return path[: len(SppPathGetExtName(path))]
