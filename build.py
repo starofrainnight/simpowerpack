@@ -7,6 +7,7 @@ import subprocess
 import glob
 import os
 import subprocess
+import fnmatch
 from pytosim.__main__ import (
     compile as pytosim_compile,
     compile_base as pytosim_compile_base,
@@ -22,10 +23,15 @@ from pytosim.__main__ import (
 )
 @click.pass_context
 def main(ctx, output_dir):
-    # type: (click.Context, str)
+    # type: (click.Context, str) -> None
     os.makedirs(output_dir, exist_ok=True)
 
-    srcs = glob.glob("./src/*.py")
+    srcs = list(
+        filter(
+            lambda it: not fnmatch.fnmatch(os.path.basename(it), "__init__.*"),
+            glob.glob("./src/*.py"),
+        )
+    )
     if len(srcs) < 0:
         click.echo("No source found!")
 
