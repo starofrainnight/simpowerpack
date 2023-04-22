@@ -40,4 +40,4 @@ def SppPathGetExtName(path: str) -> str:
 
 
 def SppPathStripExt(path: str) -> str:
-    return path[: len(SppPathGetExtName(path))]
+    return path[: -len(SppPathGetExtName(path))]
