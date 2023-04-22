@@ -6,7 +6,8 @@ def SppGetDebugOutputBuf():
     hbuf = simbuf.GetBufHandle("__SPP_DEBUG__")
     if hbuf == 0:
         hbuf = simbuf.NewBuf("__SPP_DEBUG__")
-        simbuf.SetCurrentBuf(hbuf)
+        # Don't set the current buffer, otherwise, it will take effects on
+        # the current buffer lead your script not works as expect
     return hbuf
 
 
