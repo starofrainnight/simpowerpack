@@ -21,12 +21,12 @@ def SppCLangSwitchHeaderAndSource():
     srcExts = ".c.cpp.cxx."
 
     if sppstr.SppStrFind2(hdrExts, fextTag) >= 0:
-        extsBuf = simbuf.NewBuf("__SPP_EXTS_BUF")
+        extsBuf = simbuf.NewBuf()
         simbuf.AppendBufLine(extsBuf, "c")
         simbuf.AppendBufLine(extsBuf, "cpp")
         simbuf.AppendBufLine(extsBuf, "cxx")
     elif sppstr.SppStrFind2(srcExts, fextTag) >= 0:
-        extsBuf = simbuf.NewBuf("__SPP_EXTS_BUF")
+        extsBuf = simbuf.NewBuf()
         simbuf.AppendBufLine(extsBuf, "h")
         simbuf.AppendBufLine(extsBuf, "hpp")
         simbuf.AppendBufLine(extsBuf, "hxx")
@@ -35,7 +35,7 @@ def SppCLangSwitchHeaderAndSource():
 
     fnameWe = spppath.SppPathStripExt(fbasename)
 
-    locBuf = simbuf.NewBuf("__SPP_CLSHAS")
+    locBuf = simbuf.NewBuf()
     count = simbuf.GetBufLineCount(extsBuf)
     ln = 0
     while ln < count:
