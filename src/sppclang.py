@@ -4,6 +4,8 @@ from pytosim.api import (
     filebuffer as simbuf,
     string as simstr,
     symbol as simsym,
+    window as simwin,
+    types as simtypes,
     ioutil,
 )
 from . import spppath, sppstr, sppdebug
@@ -57,5 +59,81 @@ def SppCLangSwitchHeaderAndSource():
     simbuf.CloseBuf(extsBuf)
 
 
+def SppClangCheckIfSelectionCommentted(hwnd: simtypes.HWnd) -> bool:
+    hbuf = simwin.GetWndBuf(hwnd)
+    sel = simwin.GetWndSel(hwnd)
+
+    # Check if it's comments or not
+    for i in range(sel.lnFirst, sel.lnLast + 1):
+        line = simbuf.GetBufLine(hbuf, i)
+        nonWsIdx = sppstr.SppStrFindFirstNonWs(line, 0)
+        if nonWsIdx < 0:
+            continue
+
+        # Found first non-whitespace index and check the comment prefix
+        if sppstr.SppStrStartsWith(line, "//", nonWsIdx):
+            continue
+
+        return False
+    else:
+        return True
+
+
 def SppClangSwitchCommentBlock():
-    pass
+    # Speed up the later script and avoid problems
+    ioutil.StartMsg("Switch Comment ...")
+
+    hwnd = simwin.GetCurrentWnd()
+    hbuf = simwin.GetWndBuf(hwnd)
+    sel = simwin.GetWndSel(hwnd)
+
+    iLine = sel.lnFirst
+    iCommentCount = 0
+    iUnCommentCount = 0
+    iLineCount = sel.lnLast - sel.lnFirst + 1
+
+    if SppClangCheckIfSelectionCommentted(hwnd):
+        # Commentted
+
+        # Uncomment selections
+        for i in range(sel.lnFirst, sel.lnLast + 1):
+            line = simbuf.GetBufLine(hbuf, i)
+            nonWsIdx = sppstr.SppStrFindFirstNonWs(line, 0)
+            if nonWsIdx < 0:
+                continue
+
+            # Found first non-whitespace index and remove the comment prefix
+            origSpaces = line[:nonWsIdx]
+            restText = line[nonWsIdx:]
+            if sppstr.SppStrStartsWith(restText, "//", 0):
+                if restText[2] == " ":
+                    restText = restText[3:]
+                else:
+                    restText = restText[2:]
+                line = f"{origSpaces}{restText}"
+                simbuf.DelBufLine(hbuf, i)
+                simbuf.InsBufLine(hbuf, i, line)
+
+    else:
+        # Uncommentted
+
+        # Comment selections
+        for i in range(sel.lnFirst, sel.lnLast + 1):
+            line = simbuf.GetBufLine(hbuf, i)
+            nonWsIdx = sppstr.SppStrFindFirstNonWs(line, 0)
+            if nonWsIdx < 0:
+                continue
+
+            # Found first non-whitespace index and insert the comment prefix
+            origSpaces = line[:nonWsIdx]
+            restText = line[nonWsIdx:]
+
+            line = f"{origSpaces}// {restText}"
+            simbuf.DelBufLine(hbuf, i)
+            simbuf.InsBufLine(hbuf, i, line)
+
+    line = simbuf.GetBufLine(hbuf, 0)
+    sel.ichLim = len(line)
+    simwin.SetWndSel(hwnd, sel)
+
+    ioutil.EndMsg()
