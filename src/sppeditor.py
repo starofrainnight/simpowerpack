@@ -31,3 +31,42 @@ def SppOnKeyHome():
 
     cmds.Beginning_of_Line()
     simbuf.SetBufIns(hbuf, sel.lnFirst, ich)
+
+
+def SppOnPairCharKeyPressed(openChar, closeChar):
+    hwnd = simwin.GetCurrentWnd()
+    if hwnd == hNil:
+        return
+
+    sel = simwin.GetWndSel(hwnd)
+    hbuf = simwin.GetWndBuf(hwnd)
+    selText = simbuf.GetBufSelText(hbuf)
+    if len(selText) > 0:
+        selText = f"{openChar}{selText}{closeChar}"
+        simbuf.SetBufSelText(hbuf, selText)
+    else:
+        simbuf.SetBufSelText(hbuf, openChar)
+
+
+def SppOnOpenParenKeyPressed():
+    SppOnPairCharKeyPressed("(", ")")
+
+
+def SppOnOpenBraceKeyPressed():
+    SppOnPairCharKeyPressed("{", "}")
+
+
+def SppOnOpenSquareBracketKeyPressed():
+    SppOnPairCharKeyPressed("[", "]")
+
+
+def SppOnOpenAngleBracketKeyPressed():
+    SppOnPairCharKeyPressed("<", ">")
+
+
+def SppOnOpenDoubleQuoteKeyPressed():
+    SppOnPairCharKeyPressed('"', '"')
+
+
+def SppOnOpenSingleQuoteKeyPressed():
+    SppOnPairCharKeyPressed("'", "'")

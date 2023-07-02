@@ -15,3 +15,21 @@ def SppCLangIdeInstall():
     # Bind "Jump_To_Definition" function
     # Ctrl+=, "=" = 61, "Ctrl+=" = 1085, "Ctrl+Shift+=" = 1853
     ioutil.AssignKeyToCmd(1853, "SuperJumpToDefinition")
+
+    # (
+    ioutil.AssignKeyToCmd(808, "SppOnOpenParenKeyPressed")
+
+    # [, it not works with simple symbol!
+    # ioutil.AssignKeyToCmd(91, "SppOnOpenSquareBracketKeyPressed")
+
+    # {
+    ioutil.AssignKeyToCmd(891, "SppOnOpenBraceKeyPressed")
+
+    # "
+    ioutil.AssignKeyToCmd(802, "SppOnOpenDoubleQuoteKeyPressed")
+
+    # ', it not works with simple symbol!
+    ioutil.AssignKeyToCmd(39, "SppOnOpenSingleQuoteKeyPressed")
+
+    # <
+    ioutil.AssignKeyToCmd(828, "SppOnOpenAngleBracketKeyPressed")
