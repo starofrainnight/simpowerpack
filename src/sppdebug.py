@@ -1,5 +1,6 @@
 import pytosim.api.system as simsys
 import pytosim.api.filebuffer as simbuf
+import pytosim.api.ioutil as simio
 
 
 def SppGetDebugOutputBuf():
@@ -27,3 +28,10 @@ def SppTraceClear():
     hbuf = SppGetDebugOutputBuf()
     simbuf.ClearBuf(hbuf)
     simbuf.SetBufDirty(hbuf, False)
+
+
+def SppCheckKeyValue():
+    simio.StartMsg("Checking key value, please input one:")
+    value = simio.GetKey()
+    simio.EndMsg()
+    simio.Msg(f"You inputted key: {value}")
