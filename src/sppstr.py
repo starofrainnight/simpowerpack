@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from pytosim.api import string as simstr
 from . import sppdebug as sppdbg
 
 
@@ -140,3 +141,30 @@ def SppStrEndsWith(s: str, sub: str) -> bool:
             return False
 
     return True
+
+
+def SppStrIntFormat(value: int, width: int):
+    valueText = f"{value}"
+    valueLen = len(valueText)
+    if valueLen < width:
+        count = width - valueLen
+
+        for i in range(0, count):
+            valueText = f"0{valueText}"
+
+    return valueText
+
+
+def SppStrReplace(s: str, oldSub: str, newSub: str):
+    oldSubLen = len(oldSub)
+    while True:
+        idx = SppStrFind2(s, oldSub)
+        if idx < 0:
+            break
+
+        part0 = s[:idx]
+        part1 = s[idx + oldSubLen :]
+
+        s = f"{part0}{newSub}{part1}"
+
+    return s

@@ -6,6 +6,7 @@ from pytosim.api import (
     symbol as simsym,
     window as simwin,
     types as simtypes,
+    system as simsys,
     ioutil,
 )
 from . import spppath, sppstr, sppdebug
@@ -143,5 +144,40 @@ def SppClangSwitchCommentBlock():
     line = simbuf.GetBufLine(hbuf, 0)
     sel.ichLim = len(line)
     simwin.SetWndSel(hwnd, sel)
+
+    ioutil.EndMsg()
+
+
+def SppClangInsertHeaderGuard():
+    ioutil.StartMsg("Insert header guard")
+
+    hwnd = simwin.GetCurrentWnd()
+    hbuf = simwin.GetWndBuf(hwnd)
+
+    systime = ioutil.GetSysTime(0)
+    proginfo = simsys.GetProgramEnvironmentInfo()
+
+    # Get a unique number for this device
+    sn = sppstr.SppStrReplace(f"{proginfo.SerialNumber}", "-", "")[3:]
+
+    year = sppstr.SppStrIntFormat(systime.Year, 4)
+    month = sppstr.SppStrIntFormat(systime.Month, 2)
+    day = sppstr.SppStrIntFormat(systime.Day, 2)
+    hour = sppstr.SppStrIntFormat(systime.Hour, 2)
+    minute = sppstr.SppStrIntFormat(systime.Minute, 2)
+    second = sppstr.SppStrIntFormat(systime.Second, 2)
+    milliseconds = sppstr.SppStrIntFormat(systime.Milliseconds, 3)
+    wndCount = simwin.WndListCount()
+    guard = f"_9M_{sn}{year}{month}{day}{hour}{hour}{minute}{second}{milliseconds}{hwnd}{hbuf}{wndCount}"
+
+    prop = simbuf.GetBufProps(hbuf)
+
+    # Add newline at the buffer end
+    simbuf.InsBufLine(hbuf, prop.lnCount, "")
+    simbuf.InsBufLine(hbuf, prop.lnCount, f"#endif // {guard}")
+    simbuf.InsBufLine(hbuf, prop.lnCount, "")
+    simbuf.InsBufLine(hbuf, 0, f"#ifndef {guard}")
+    simbuf.InsBufLine(hbuf, 1, f"#define {guard}")
+    simbuf.InsBufLine(hbuf, 2, "")
 
     ioutil.EndMsg()
