@@ -181,3 +181,33 @@ def SppClangInsertHeaderGuard():
     simbuf.InsBufLine(hbuf, 2, "")
 
     ioutil.EndMsg()
+
+
+def SppCLangWrapCppExtern():
+    ioutil.StartMsg("Wrap CPP externs for C")
+
+    hwnd = simwin.GetCurrentWnd()
+    hbuf = simwin.GetWndBuf(hwnd)
+    lnFirst = simwin.GetWndSelLnFirst(hwnd)
+    lnLast = simwin.GetWndSelLnLast(hwnd)
+
+    lnPos = lnFirst
+    simbuf.InsBufLine(hbuf, lnPos, "#ifdef __cplusplus")
+    lnPos = lnPos + 1
+    simbuf.InsBufLine(hbuf, lnPos, 'extern "C" {')
+    lnPos = lnPos + 1
+    simbuf.InsBufLine(hbuf, lnPos, "#endif /* __cplusplus */")
+    lnPos = lnPos + 1
+    simbuf.InsBufLine(hbuf, lnPos, "")
+    lnPos = lnPos + 1
+
+    lnPos = lnLast + (lnPos - lnFirst) + 1
+    simbuf.InsBufLine(hbuf, lnPos, "")
+    lnPos = lnPos + 1
+    simbuf.InsBufLine(hbuf, lnPos, "#ifdef __cplusplus")
+    lnPos = lnPos + 1
+    simbuf.InsBufLine(hbuf, lnPos, "}")
+    lnPos = lnPos + 1
+    simbuf.InsBufLine(hbuf, lnPos, "#endif /* __cplusplus */")
+
+    ioutil.EndMsg()
