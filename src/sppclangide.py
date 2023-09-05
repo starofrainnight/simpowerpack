@@ -10,7 +10,7 @@ def SppCLangIdeInstall():
         ioutil.KeyFromChar("o", 0, 0, 1), "SppCLangSwitchHeaderAndSource"
     )
     # F11, trigger the window list
-    ioutil.AssignKeyToCmd(ioutil.KeyFromChar("F11", 0, 0, 0), "Window_List")
+    ioutil.AssignKeyToCmd(ioutil.KeyFromChar("F11", 0, 0, 0), "Window List")
 
     # Bind "Jump_To_Definition" function
     # Ctrl+=, "=" = 61, "Ctrl+=" = 1085, "Ctrl+Shift+=" = 1853
