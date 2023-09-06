@@ -7,9 +7,11 @@ from pytosim.api import (
     window as simwin,
     types as simtypes,
     system as simsys,
+    cmds as simcmds,
     ioutil,
 )
-from . import spppath, sppstr, sppdebug
+from pytosim.api.constant import hNil, Nil
+from . import spppath, sppstr, sppdebug, sppworkingfile
 
 
 def SppCLangSwitchHeaderAndSource():
@@ -54,17 +56,22 @@ def SppCLangSwitchHeaderAndSource():
         )
         if symLocCount > 0:
             loc = simbuf.GetBufLine(locBuf, 0)  # type: simsym.Symbol
+
+            sppworkingfile.SppWorkingFileAppend(loc.File)
+
+            # EndMsg() must before SetCurrentBuf(), otherwise it won't focus 
+            # in the source window 
+            ioutil.EndMsg()
+
             targetFileBuf = simbuf.OpenBuf(loc.File)
             break
 
         ln = ln + 1
 
-    simbuf.CloseBuf(locBuf)
-    simbuf.CloseBuf(extsBuf)
-
-    # EndMsg() must before SetCurrentBuf(), otherwise it won't focus 
-    # in the source window 
     ioutil.EndMsg()
+
+    simbuf.CloseBuf(locBuf)
+    simbuf.CloseBuf(extsBuf)    
 
     if targetFileBuf != hNil:
         simbuf.SetCurrentBuf(targetFileBuf)
