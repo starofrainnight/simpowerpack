@@ -14,7 +14,7 @@ def SppCLangIdeInstall():
 
     # Bind "Jump_To_Definition" function
     # Ctrl+=, "=" = 61, "Ctrl+=" = 1085, "Ctrl+Shift+=" = 1853
-    ioutil.AssignKeyToCmd(1853, "SuperJumpToDefinition")
+    ioutil.AssignKeyToCmd(1853, "SppCLangJumpToDefinition")
 
     # (
     ioutil.AssignKeyToCmd(808, "SppOnOpenParenKeyPressed")

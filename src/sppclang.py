@@ -221,3 +221,64 @@ def SppCLangWrapCppExtern():
     simbuf.InsBufLine(hbuf, lnPos, "#endif /* __cplusplus */")
 
     ioutil.EndMsg()
+
+
+def SppCLangJumpToDefinition():
+    ioutil.StartMsg("Jump to definition ...")
+    hwnd = simwin.GetCurrentWnd()
+    hbuf = simwin.GetWndBuf(hwnd)
+    lnFirst = simwin.GetWndSelLnFirst(hwnd)
+    sppdebug.SppTrace(f"lnFirst: {lnFirst}")
+
+    # Check if a
+    line = simbuf.GetBufLine(hbuf, lnFirst)
+    idx = sppstr.SppStrFindFirstNonWs(line, 0)
+    if idx < 0:
+        ioutil.EndMsg()
+        return
+
+    if line[idx] != "#":
+        ioutil.EndMsg()
+        return
+
+    idxDoubleQuote = sppstr.SppStrFind(line, '"', 0, -1)
+    idxLessThanSign = sppstr.SppStrFind(line, "<", 0, -1)
+    if idxDoubleQuote < 0 and idxLessThanSign < 0:
+        ioutil.EndMsg()
+        return
+
+    if idxDoubleQuote > idxLessThanSign:
+        # '"'
+        idxDoubleQuoteEnd = sppstr.SppStrFind(
+            line, '"', idxDoubleQuote + 1, -1
+        )
+        fpath = line[idxDoubleQuote + 1, idxDoubleQuoteEnd]
+    else:
+        # '<'
+        idxLessThanSignEnd = sppstr.SppStrFind(
+            line, ">", idxLessThanSign + 1, -1
+        )
+        fpath = line[idxLessThanSign + 1, idxLessThanSignEnd]
+
+    if sppstr.SppStrFind(fpath, '\\', 0, -1) < 0 and  sppstr.SppStrFind(fpath, '/', 0, -1) < 0:
+        ioutil.EndMsg()
+        simcmds.Jump_To_Definition
+        return
+    
+    hbuf = simbuf.NewBuf("__SPP_SYMBOL_LOCS")
+    fpath = sppstr.SppStrReplace(fpath, "/", "\\")
+    fbasename = spppath.SppPathGetBaseName(fpath, hbuf, 1, 1, 0)        
+    
+    # Fix the symbol from idiot GetCurSymbol()
+    fbasename = sppstr.SppStrReplace(fbasename, simstr.CharFromAscii(2), "\.")
+
+    # We must stop the msgbox before SetCurrentBuf(), so it's allowed to popup.
+    ioutil.EndMsg()
+
+    count = simsym.GetSymbolLocationEx(fbasename, hbuf, 1, 1, 0)    
+    if count > 0:
+        loc = simbuf.GetBufLine(hbuf, 0)
+        simbuf.SetCurrentBuf(simbuf.OpenBuf(loc.file))
+    
+    simbuf.CloseBuf(hbuf)
+    
