@@ -37,6 +37,7 @@ def SppCLangSwitchHeaderAndSource():
         simbuf.AppendBufLine(extsBuf, "hpp")
         simbuf.AppendBufLine(extsBuf, "hxx")
     else:
+        ioutil.EndMsg()
         return
 
     fnameWe = spppath.SppPathStripExt(fbasename)
@@ -54,7 +55,6 @@ def SppCLangSwitchHeaderAndSource():
         if symLocCount > 0:
             loc = simbuf.GetBufLine(locBuf, 0)  # type: simsym.Symbol
             targetFileBuf = simbuf.OpenBuf(loc.File)
-
             break
 
         ln = ln + 1
@@ -62,10 +62,10 @@ def SppCLangSwitchHeaderAndSource():
     simbuf.CloseBuf(locBuf)
     simbuf.CloseBuf(extsBuf)
 
-    ioutil.EndMsg()
-
     if targetFileBuf != hNil:
         simbuf.SetCurrentBuf(targetFileBuf)
+
+    ioutil.EndMsg()
 
 
 def SppClangCheckIfSelectionCommentted(hwnd: simtypes.HWnd) -> bool:
