@@ -62,10 +62,13 @@ def SppCLangSwitchHeaderAndSource():
     simbuf.CloseBuf(locBuf)
     simbuf.CloseBuf(extsBuf)
 
+    # EndMsg() must before SetCurrentBuf(), otherwise it won't focus 
+    # in the source window 
+    ioutil.EndMsg()
+
     if targetFileBuf != hNil:
         simbuf.SetCurrentBuf(targetFileBuf)
 
-    ioutil.EndMsg()
 
 
 def SppClangCheckIfSelectionCommentted(hwnd: simtypes.HWnd) -> bool:
