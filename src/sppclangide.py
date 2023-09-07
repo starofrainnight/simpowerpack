@@ -36,3 +36,9 @@ def SppCLangIdeInstall():
 
     # Home
     ioutil.AssignKeyToCmd(ioutil.KeyFromChar("Home", 0, 0, 0), "SppOnKeyHome")
+
+    # Add "Alt+Left" to "Go Back" command (Overwrite the Scroll Left function)
+    ioutil.AssignKeyToCmd(ioutil.KeyFromChar("Left", 0, 0, 1), "Go Back")
+
+    # Add "Alt+Right" to "Go Forward" command (Overwrite the Scroll Right function)
+    ioutil.AssignKeyToCmd(ioutil.KeyFromChar("Right", 0, 0, 1), "Go Forward")
