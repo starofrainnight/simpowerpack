@@ -238,6 +238,8 @@ def SppCLangJumpToDefinition():
 
     if line[idx] != "#":
         ioutil.EndMsg()
+
+        simcmds.Jump_To_Definition()
         return
 
     idxDoubleQuote = sppstr.SppStrFind(line, '"', 0, -1)
