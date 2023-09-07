@@ -98,7 +98,7 @@ def SppClangCheckIfSelectionCommentted(hwnd: simtypes.HWnd) -> bool:
         return True
 
 
-def SppClangSwitchCommentBlock():
+def SppCLangSwitchCommentBlock():
     # Speed up the later script and avoid problems
     ioutil.StartMsg("Switch Comment ...")
 

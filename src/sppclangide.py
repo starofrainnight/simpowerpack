@@ -4,7 +4,7 @@ from pytosim.api import ioutil
 
 def SppCLangIdeInstall():
     # Ctrl+/,  "/" = 47, "Ctrl+/" = 1071
-    ioutil.AssignKeyToCmd(1071, "SppClangSwitchCommentBlock")
+    ioutil.AssignKeyToCmd(1071, "SppCLangSwitchCommentBlock")
     # Alt+o
     ioutil.AssignKeyToCmd(
         ioutil.KeyFromChar("o", 0, 0, 1), "SppCLangSwitchHeaderAndSource"
