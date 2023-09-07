@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from pytosim.api import (event, filebuffer as simbuf, system as simsys, ioutil)
 from pytosim.api.constant import *
-from . import sppstr, sppworkingfile
+from . import sppstr, sppworkingfile, spppath
 
 @event.DocumentOpen
 def SppOnDocumentOpen(sFile: str):
@@ -40,3 +40,27 @@ def SppOnDocumentOpen(sFile: str):
 
     # NOTE: We won't clear the list, because we might open that file multi-times   
     
+@event.DocumentSaveComplete
+def SppOnDocumentSaveComplete(sFile: str):
+    # Format the document when it's c/cpp sources
+    fext = spppath.SppPathGetExtName(sFile)
+    cexts = ".h.hpp.hxx.inl.c.cpp.cxx."
+    if sppstr.SppStrFind(cexts, fext, 0, -1) < 0:
+        return
+
+    simsys.RunCmdLine(f'clang-format -i --style=file --fallback-style=none "{sFile}"', Nil, True)
+
+    # Refresh the buffer
+    curBuf  = simbuf.GetCurrentBuf()
+    fileBuf = simbuf.GetBufHandle(sFile)
+
+    if curBuf == fileBuf:
+        isCurBuf = True
+    else:
+        isCurBuf = False
+
+    simbuf.CloseBuf(fileBuf)    
+    fileBuf = simbuf.OpenBuf(sFile)
+
+    if isCurBuf:
+        simbuf.SetCurrentBuf(fileBuf)
