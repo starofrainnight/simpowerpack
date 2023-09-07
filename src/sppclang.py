@@ -228,7 +228,6 @@ def SppCLangJumpToDefinition():
     hwnd = simwin.GetCurrentWnd()
     hbuf = simwin.GetWndBuf(hwnd)
     lnFirst = simwin.GetWndSelLnFirst(hwnd)
-    sppdebug.SppTrace(f"lnFirst: {lnFirst}")
 
     # Check if a
     line = simbuf.GetBufLine(hbuf, lnFirst)
