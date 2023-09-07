@@ -33,3 +33,6 @@ def SppCLangIdeInstall():
 
     # <
     ioutil.AssignKeyToCmd(828, "SppOnOpenAngleBracketKeyPressed")
+
+    # Home
+    ioutil.AssignKeyToCmd(ioutil.KeyFromChar("Home", 0, 0, 0), "SppOnKeyHome")

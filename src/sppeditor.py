@@ -2,8 +2,8 @@
 from pytosim.api import (
     window as simwin,
     filebuffer as simbuf,
-    string as simstr,
     cmds,
+    ioutil
 )
 from . import sppstr
 
@@ -13,24 +13,28 @@ def SppOnKeyHome():
     if hwnd == hNil:
         return
 
+    ioutil.StartMsg("Jump to home...")
+
     sel = simwin.GetWndSel(hwnd)
     hbuf = simwin.GetWndBuf(hwnd)
 
     # if the first character on the line is white space,
     # then move forward to the first word on the line
-    ichNonWs = sppstr.SppStrFindFirstNonWs()
+    line = simbuf.GetBufLine(hbuf, sel.lnFirst)
+    ichNonWs = sppstr.SppStrFindFirstNonWs(line, 0)
     if ichNonWs == sel.ichFirst:
-        if ichNonWs != 0:
-            ich = 0
-        else:
-            ich = ichNonWs
-    elif sel.ichFirst < ichNonWs:
         ich = 0
+    elif sel.ichFirst < ichNonWs:
+        if sel.ichFirst == 0:
+            ich = ichNonWs
+        else:
+            ich = 0
     else:
         ich = ichNonWs
 
     cmds.Beginning_of_Line()
     simbuf.SetBufIns(hbuf, sel.lnFirst, ich)
+    ioutil.EndMsg()
 
 
 def SppOnPairCharKeyPressed(openChar, closeChar):
