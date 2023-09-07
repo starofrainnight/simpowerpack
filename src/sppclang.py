@@ -262,7 +262,7 @@ def SppCLangJumpToDefinition():
 
     if sppstr.SppStrFind(fpath, '\\', 0, -1) < 0 and  sppstr.SppStrFind(fpath, '/', 0, -1) < 0:
         ioutil.EndMsg()
-        simcmds.Jump_To_Definition
+        simcmds.Jump_To_Definition()
         return
     
     hbuf = simbuf.NewBuf("__SPP_SYMBOL_LOCS")
