@@ -37,24 +37,6 @@ def SppOnDocumentOpen(sFile: str):
 
     simbuf.AppendBufLine(listBuf, sFile)
     simbuf.SetBufDirty(listBuf, False)
-    
 
-@event.DocumentClose
-def SppOnDocumentClose(sFile: str):
-    listBufTag = "__SPP_CODEC_FIXED_LIST"
-    listBuf = simbuf.GetBufHandle(listBufTag)
-    if listBuf == hNil:
-        return
-    
-    ioutil.StartMsg("Closing document ...")
-    cnt = simbuf.GetBufLineCount(listBuf)
-    for i in range(0, cnt):
-        line = simbuf.GetBufLine(listBuf, i)
-        if line == sFile:
-            simbuf.DelBufLine(listBuf, i)
-            simbuf.SetBufDirty(listBuf, False)
-            ioutil.EndMsg()
-            return
-        
-    ioutil.EndMsg()
+    # NOTE: We won't clear the list, because we might open that file multi-times   
     
