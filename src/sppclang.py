@@ -259,26 +259,28 @@ def SppCLangJumpToDefinition():
             line, ">", idxLessThanSign + 1, -1
         )
         fpath = line[idxLessThanSign + 1, idxLessThanSignEnd]
-
-    if sppstr.SppStrFind(fpath, '\\', 0, -1) < 0 and  sppstr.SppStrFind(fpath, '/', 0, -1) < 0:
-        ioutil.EndMsg()
-        simcmds.Jump_To_Definition()
-        return
     
-    hbuf = simbuf.NewBuf("__SPP_SYMBOL_LOCS")
+    hbuf = simbuf.NewBuf("__SPP_SYMBOL_LOCS.h")
     fpath = sppstr.SppStrReplace(fpath, "/", "\\")
-    fbasename = spppath.SppPathGetBaseName(fpath, hbuf, 1, 1, 0)        
+    fbasename = spppath.SppPathGetBaseName(fpath)        
     
     # Fix the symbol from idiot GetCurSymbol()
     fbasename = sppstr.SppStrReplace(fbasename, simstr.CharFromAscii(2), "\.")
 
     # We must stop the msgbox before SetCurrentBuf(), so it's allowed to popup.
     ioutil.EndMsg()
-
-    count = simsym.GetSymbolLocationEx(fbasename, hbuf, 1, 1, 0)    
-    if count > 0:
+  
+    count = simsym.GetSymbolLocationEx(fbasename, hbuf, 1, 1, 0)
+    if count == 1:
+        # Found only one matched, just directly open that file
         loc = simbuf.GetBufLine(hbuf, 0)
         simbuf.SetCurrentBuf(simbuf.OpenBuf(loc.file))
+    else:
+        # Force to popup the mulit-matched window
+        simbuf.AppendBufLine(hbuf, f'#include "{fbasename}"')
+        simbuf.SetBufIns(hbuf, 0, 12)
+        simbuf.SetCurrentBuf(hbuf)
+        simcmds.Jump_To_Definition()
     
     simbuf.CloseBuf(hbuf)
     
