@@ -57,10 +57,8 @@ def SppCLangSwitchHeaderAndSource():
         if symLocCount > 0:
             loc = simbuf.GetBufLine(locBuf, 0)  # type: simsym.Symbol
 
-            sppworkingfile.SppWorkingFileAppend(loc.File)
-
-            # EndMsg() must before SetCurrentBuf(), otherwise it won't focus 
-            # in the source window 
+            # EndMsg() must before SetCurrentBuf(), otherwise it won't focus
+            # in the source window
             ioutil.EndMsg()
 
             targetFileBuf = simbuf.OpenBuf(loc.File)
@@ -71,11 +69,11 @@ def SppCLangSwitchHeaderAndSource():
     ioutil.EndMsg()
 
     simbuf.CloseBuf(locBuf)
-    simbuf.CloseBuf(extsBuf)    
+    simbuf.CloseBuf(extsBuf)
 
     if targetFileBuf != hNil:
         simbuf.SetCurrentBuf(targetFileBuf)
-
+        simbuf.SetBufDirty(targetFileBuf, False)
 
 
 def SppClangCheckIfSelectionCommentted(hwnd: simtypes.HWnd) -> bool:
@@ -260,17 +258,17 @@ def SppCLangJumpToDefinition():
             line, ">", idxLessThanSign + 1, -1
         )
         fpath = line[idxLessThanSign + 1, idxLessThanSignEnd]
-    
+
     hbuf = simbuf.NewBuf("__SPP_SYMBOL_LOCS.h")
     fpath = sppstr.SppStrReplace(fpath, "/", "\\")
-    fbasename = spppath.SppPathGetBaseName(fpath)        
-    
+    fbasename = spppath.SppPathGetBaseName(fpath)
+
     # Fix the symbol from idiot GetCurSymbol()
     fbasename = sppstr.SppStrReplace(fbasename, simstr.CharFromAscii(2), "\.")
 
     # We must stop the msgbox before SetCurrentBuf(), so it's allowed to popup.
     ioutil.EndMsg()
-  
+
     count = simsym.GetSymbolLocationEx(fbasename, hbuf, 1, 1, 0)
     if count == 1:
         # Found only one matched, just directly open that file
@@ -282,7 +280,7 @@ def SppCLangJumpToDefinition():
         simbuf.SetBufIns(hbuf, 0, 12)
         simbuf.SetCurrentBuf(hbuf)
         simcmds.Jump_To_Definition()
-    
+
     simbuf.CloseBuf(hbuf)
 
 
