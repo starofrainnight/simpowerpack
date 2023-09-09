@@ -285,6 +285,11 @@ def SppCLangJumpToDefinition():
 
 
 def SppCLangCheckIfCSourceFile(fpath: str) -> bool:
+    hbuf = simbuf.GetBufHandle(fpath)
+    if hbuf != hNil:
+        prop = simbuf.GetBufProps(hbuf)
+        return prop.Language == "C Language" or prop.Language == "C++ Language"
+
     fext = spppath.SppPathGetExtName(fpath)
     cexts = ".h.hpp.hxx.inl.c.cpp.cxx."
     return sppstr.SppStrFind(cexts, fext, 0, -1) >= 0
