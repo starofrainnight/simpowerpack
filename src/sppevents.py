@@ -15,6 +15,9 @@ def SppOnDocumentOpen(sFile: str):
     if sppstr.SppStrStartsWith(sFile, "__SPP_", 0):
         return
 
+    if not sppclang.SppCLangCheckIfCSourceFile(sFile):
+        return
+
     ioutil.StartMsg("Checking document codec ...")
     listBufTag = "__SPP_CODEC_FIXED_LIST"
     listBuf = simbuf.GetBufHandle(listBufTag)
