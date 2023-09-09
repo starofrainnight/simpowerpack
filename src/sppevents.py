@@ -7,7 +7,7 @@ from pytosim.api import (
     ioutil,
 )
 from pytosim.api.constant import *
-from . import sppstr, sppworkingfile, spppath, sppbuffer
+from . import sppstr, sppworkingfile, spppath, sppbuffer, sppclang
 
 
 @event.DocumentOpen
@@ -45,9 +45,7 @@ def SppOnDocumentOpen(sFile: str):
 @event.DocumentSaveComplete
 def SppOnDocumentSaveComplete(sFile: str):
     # Format the document when it's c/cpp sources
-    fext = spppath.SppPathGetExtName(sFile)
-    cexts = ".h.hpp.hxx.inl.c.cpp.cxx."
-    if sppstr.SppStrFind(cexts, fext, 0, -1) < 0:
+    if not sppclang.SppCLangCheckIfCSourceFile(sFile):
         return
 
     simsys.RunCmdLine(
