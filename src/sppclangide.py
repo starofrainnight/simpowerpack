@@ -42,3 +42,6 @@ def SppCLangIdeInstall():
 
     # Add "Alt+Right" to "Go Forward" command (Overwrite the Scroll Right function)
     ioutil.AssignKeyToCmd(ioutil.KeyFromChar("Right", 0, 0, 1), "Go Forward")
+
+    # Specific Ctrl+A to Select All
+    ioutil.AssignKeyToCmd(1089, "Select All")
