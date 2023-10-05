@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-from pytosim.api import (
-    window as simwin,
-    filebuffer as simbuf,
-    cmds,
-    ioutil
-)
+from pytosim.api import window as simwin, filebuffer as simbuf, cmds, ioutil
 from . import sppstr
 
 
@@ -44,10 +39,37 @@ def SppOnPairCharKeyPressed(openChar, closeChar):
 
     sel = simwin.GetWndSel(hwnd)
     hbuf = simwin.GetWndBuf(hwnd)
-    selText = simbuf.GetBufSelText(hbuf)
-    if len(selText) > 0:
-        selText = f"{openChar}{selText}{closeChar}"
-        simbuf.SetBufSelText(hbuf, selText)
+    if sel.fExtended:
+        if sel.lnFirst == sel.lnLast:
+            line = simbuf.GetBufLine(hbuf, sel.lnFirst)
+
+            firstPart = line[: sel.ichFirst]
+
+            secondPart = line[sel.ichFirst : sel.ichLim]
+
+            thirdPart = line[sel.ichLim :]
+
+            line = f"{firstPart}{openChar}{secondPart}{closeChar}{thirdPart}"
+            simbuf.PutBufLine(hbuf, sel.lnFirst, line)
+
+            sel.ichFirst = sel.ichFirst + len(openChar)
+            sel.ichLim = sel.ichLim + len(openChar)
+            simwin.SetWndSel(hwnd, sel)
+        else:
+            line = simbuf.GetBufLine(hbuf, sel.lnFirst)
+            firstPart = line[: sel.ichFirst]
+            secondPart = line[sel.ichFirst :]
+            line = f"{firstPart}{openChar}{secondPart}"
+            simbuf.PutBufLine(hbuf, sel.lnFirst, line)
+
+            line = simbuf.GetBufLine(hbuf, sel.lnLast)
+            firstPart = line[: sel.ichLim]
+            secondPart = line[sel.ichLim :]
+            line = f"{firstPart}{closeChar}{secondPart}"
+            simbuf.PutBufLine(hbuf, sel.lnLast, line)
+
+            sel.ichFirst = sel.ichFirst + len(openChar)
+            simwin.SetWndSel(hwnd, sel)
     else:
         simbuf.SetBufSelText(hbuf, openChar)
 
