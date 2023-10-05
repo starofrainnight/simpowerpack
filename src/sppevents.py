@@ -45,17 +45,28 @@ def SppOnDocumentOpen(sFile: str):
     # NOTE: We won't clear the list, because we might open that file multi-times
 
 
-@event.DocumentSaveComplete
-def SppOnDocumentSaveComplete(sFile: str):
+@event.DocumentSave
+def SppOnDocumentSave(sFile: str):
+    # Some source insight 3 version does not have DocumentSaveComplete event, so
+    # we keep using the DocumentSave event instead.
+
     # Format the document when it's c/cpp sources
     if not sppclang.SppCLangCheckIfCSourceFile(sFile):
         return
 
+    ioutil.StartMsg("Saving ...")
+
+    buf = simbuf.GetBufHandle(sFile)
+
+    # Save the document to disk before format
+    simbuf.SaveBuf(buf)
     simsys.RunCmdLine(
-        f'clang-format -i --style=file --fallback-style=none "{sFile}"',
+        f'cmd /c clang-format -i --style=file --fallback-style=none "{sFile}"',
         Nil,
         True,
     )
 
     # Refresh the buffer
     sppbuffer.SppBufferReloadFromFilePath(sFile)
+
+    ioutil.EndMsg()
