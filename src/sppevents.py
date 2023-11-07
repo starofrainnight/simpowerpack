@@ -54,9 +54,11 @@ def SppOnDocumentSave(sFile: str):
     if not sppclang.SppCLangCheckIfCSourceFile(sFile):
         return
 
-    ioutil.StartMsg("Saving ...")
-
     buf = simbuf.GetBufHandle(sFile)
+    if not simbuf.IsBufDirty(buf):
+        return
+
+    ioutil.StartMsg("Saving ...")
 
     # Save the document to disk before format
     simbuf.SaveBuf(buf)
