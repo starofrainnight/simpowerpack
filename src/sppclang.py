@@ -281,6 +281,7 @@ def SppCLangJumpToDefinition():
         simbuf.SetCurrentBuf(hbuf)
         simcmds.Jump_To_Definition()
 
+    simbuf.SetBufDirty(hbuf, False)
     simbuf.CloseBuf(hbuf)
 
 
